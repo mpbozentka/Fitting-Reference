@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Club Fitting Reference — 2025–2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .header {
+      padding: 20px 20px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.3);
+    }
+    .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; margin: 0; letter-spacing: -0.5px; }
+    .subtitle { margin: 2px 0 0; font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; }
+    .btn-cross { padding: 8px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 11px; font-weight: 600; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-cross.active { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; }
+    .search { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 12px; }
+    .brand-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+    .brand-btn { flex: 1; min-width: 70px; padding: 10px 8px; border: 2px solid rgba(255,255,255,0.08); border-radius: 8px; background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px; font-weight: 700; font-family: 'DM Sans', sans-serif; letter-spacing: 0.3px; transition: all 0.2s; }
+    .brand-btn.active { color: #fff; }
+    .cat-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .cat-btn { padding: 10px 20px; border: none; border-bottom: 3px solid transparent; background: transparent; color: rgba(255,255,255,0.55); cursor: pointer; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.2s; }
+    .cat-btn.active { border-bottom-color: var(--accent); background: rgba(255,255,255,0.08); color: #fff; font-weight: 700; }
+    .cross-ref-panel { padding: 16px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .cross-ref-panel h3 { margin: 0 0 12px; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; }
+    .cross-ref-panel table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .cross-ref-panel th { text-align: left; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); font-weight: 600; }
+    .cross-ref-panel th:nth-child(n+2) { text-align: center; }
+    .cross-ref-panel td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 11px; }
+    .cross-ref-panel td:first-child { font-weight: 600; color: rgba(255,255,255,0.7); white-space: nowrap; }
+    .cross-ref-panel td:nth-child(n+2) { text-align: center; color: rgba(255,255,255,0.8); font-family: 'DM Mono', monospace; }
+    .cards { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s; border-left: 4px solid var(--accent); }
+    .card.expanded { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-title { margin: 0; font-size: 18px; font-weight: 700; font-family: 'Playfair Display', serif; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff; font-size: 11px; font-weight: 600; margin-right: 4px; font-family: 'DM Mono', monospace; }
+    .badge-accent { background: var(--badge-bg); }
+    .card-chevron { font-size: 18px; color: rgba(255,255,255,0.3); transition: transform 0.2s; }
+    .card.expanded .card-chevron { transform: rotate(180deg); }
+    .card-quick { margin: 8px 0 0; font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+    .card-meta { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; font-size: 10px; }
+    .card-meta span strong { color: rgba(255,255,255,0.4); letter-spacing: 0.5px; font-weight: 600; }
+    .card-meta .value { color: var(--accent); font-family: 'DM Mono', monospace; }
+    .card-details { margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; }
+    .section { margin-bottom: 8px; }
+    .section-label { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; font-family: 'DM Sans', sans-serif; }
+    .section-body { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.5; font-family: 'DM Sans', sans-serif; }
+    .fitting-notes { margin-top: 12px; padding: 12px; border-radius: 8px; background: var(--notes-bg); border: 1px solid var(--notes-border); }
+    .fitting-notes .label { font-size: 10px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+    .fitting-notes .body { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
+    .empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); }
+    .footer { padding: 20px; text-align: center; font-size: 10px; color: rgba(255,255,255,0.25); border-top: 1px solid rgba(255,255,255,0.04); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <h1 class="title">Club Fitting Reference</h1>
+        <p class="subtitle">2025–2026 Season • Drivers → Wedges</p>
+      </div>
+      <button type="button" class="btn-cross" id="btnCrossRef" aria-pressed="false">⇆ Cross-Ref</button>
+    </div>
+    <input type="text" class="search" id="search" placeholder="Search models, features, player types..." autocomplete="off" />
+    <div class="brand-tabs" id="brandTabs"></div>
+    <div class="cat-tabs" id="catTabs"></div>
+  </div>
+
+  <div class="cross-ref-panel hidden" id="crossRefPanel">
+    <h3>HEAD-TO-HEAD CROSS REFERENCE</h3>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <% brandKeys.forEach(key => { %>
+            <th style="color: <%= BRANDS[key].accent %>"><%= BRANDS[key].name %></th>
+            <% }); %>
+          </tr>
+        </thead>
+        <tbody>
+          <% Object.entries(CROSS_REF).forEach(([cat, models]) => { %>
+          <tr>
+            <td><%= cat %></td>
+            <% brandKeys.forEach(bk => { %>
+            <td><%= models[bk] %></td>
+            <% }); %>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="footer">
+    Data compiled March 2026 • Specs subject to manufacturer updates<br />
+    Tap any card to expand full specs & fitting notes
+  </div>
+
+  <script>
+    window.__INITIAL__ = <%- JSON.stringify({ BRANDS, CROSS_REF, brandKeys, defaultBrand: defaultBrand, defaultCategory: defaultCategory }) %>;
+  </script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
