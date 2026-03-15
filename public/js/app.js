@@ -7,6 +7,7 @@
     category: defaultCategory || "drivers",
     expandedIndex: null,
     showCrossRef: false,
+    showShafts: false,
     searchTerm: "",
   };
 
@@ -65,6 +66,70 @@
     });
   }
 
+  function weightDots(wtClass) {
+    const filled = Math.min(Math.max(wtClass || 0, 0), 5);
+    let dots = "";
+    for (let i = 1; i <= 5; i++) {
+      dots += i <= filled ? "●" : "○";
+    }
+    return dots;
+  }
+
+  function weightLabel(wtClass) {
+    const labels = { 1: "Ultra-Light", 2: "Light", 3: "Mid", 4: "Mid-Heavy", 5: "Heavy" };
+    return labels[wtClass] || "";
+  }
+
+  function renderShaftPanel() {
+    const container = document.getElementById("shaftPanel");
+    if (!container) return;
+
+    const brandData = BRANDS[state.brand];
+    const shafts = brandData.shafts && brandData.shafts[state.category];
+
+    if (!shafts || shafts.length === 0 || !state.showShafts) {
+      container.classList.add("hidden");
+      return;
+    }
+
+    container.classList.remove("hidden");
+
+    const stockShafts = shafts.filter((s) => !s.premium);
+    const premiumShafts = shafts.filter((s) => s.premium);
+
+    let html = `<div class="shaft-panel-header">
+      <h3>AVAILABLE SHAFTS — ${escapeHtml(brandData.name)} ${escapeHtml(state.category.toUpperCase())}</h3>
+    </div>`;
+
+    if (stockShafts.length > 0) {
+      html += `<div class="shaft-group-label">Stock (no upcharge)</div>`;
+      html += renderShaftRows(stockShafts);
+    }
+
+    if (premiumShafts.length > 0) {
+      html += `<div class="shaft-group-label" style="margin-top:12px">Premium / Custom Order</div>`;
+      html += renderShaftRows(premiumShafts);
+    }
+
+    container.innerHTML = html;
+  }
+
+  function renderShaftRows(shafts) {
+    return `<div class="shaft-list">${shafts.map((s) => {
+      const typeBadge = s.type ? `<span class="shaft-type">${escapeHtml(s.type)}</span>` : "";
+      return `<div class="shaft-row">
+        <div class="shaft-name">${escapeHtml(s.name)} ${typeBadge}</div>
+        <div class="shaft-specs">
+          <span class="shaft-spec"><strong>WT</strong> <span class="shaft-dots" title="${weightLabel(s.wtClass)}">${weightDots(s.wtClass)}</span> ${escapeHtml(s.wt)}</span>
+          <span class="shaft-spec"><strong>FLEX</strong> ${escapeHtml(s.flex)}</span>
+          <span class="shaft-spec"><strong>LAUNCH</strong> ${escapeHtml(s.launch)}</span>
+          ${s.spin ? `<span class="shaft-spec"><strong>SPIN</strong> ${escapeHtml(s.spin)}</span>` : ""}
+        </div>
+        ${s.note ? `<div class="shaft-note">${escapeHtml(s.note)}</div>` : ""}
+      </div>`;
+    }).join("")}</div>`;
+  }
+
   function renderCards() {
     const container = document.getElementById("cards");
     if (!container) return;
@@ -110,13 +175,10 @@
           if (isDrivers) {
             if (item.lofts) sections += section("Lofts Available", item.lofts);
             if (item.adjustability) sections += section("Adjustability", item.adjustability);
-            if (item.stockShafts) sections += section("Stock Shafts", item.stockShafts);
-            if (item.premiumShafts) sections += section("Premium Shafts", item.premiumShafts);
           }
           if (isIrons) {
             if (item.construction) sections += section("Construction", item.construction);
             if (item.lofts) sections += section("Lofts", item.lofts);
-            if (item.stockShafts) sections += section("Stock Shafts", item.stockShafts);
           }
           if (isWedges) {
             if (item.construction) sections += section("Construction", item.construction);
@@ -124,7 +186,6 @@
             if (item.grinds) sections += section("Grinds", item.grinds);
             if (item.bounceRange) sections += section("Bounce Range", item.bounceRange);
             if (item.finishes) sections += section("Finishes", item.finishes);
-            if (item.stockShafts) sections += section("Stock Shafts", item.stockShafts);
           }
           const notes = item.fittingNotes
             ? `<div class="fitting-notes"><div class="label">⚡ Fitting Notes</div><div class="body">${escapeHtml(item.fittingNotes)}</div></div>`
@@ -181,6 +242,7 @@
     renderBrandTabs();
     renderCatTabs();
     renderCards();
+    renderShaftPanel();
 
     const btnCrossRef = document.getElementById("btnCrossRef");
     const panel = document.getElementById("crossRefPanel");
@@ -190,9 +252,17 @@
       btnCrossRef.textContent = state.showCrossRef ? "✕ Close" : "⇆ Cross-Ref";
       btnCrossRef.setAttribute("aria-pressed", state.showCrossRef);
     }
+
+    const btnShafts = document.getElementById("btnShafts");
+    if (btnShafts) {
+      btnShafts.classList.toggle("active", state.showShafts);
+      btnShafts.textContent = state.showShafts ? "✕ Shafts" : "🔩 Shafts";
+      btnShafts.setAttribute("aria-pressed", state.showShafts);
+    }
   }
 
   document.getElementById("btnCrossRef")?.addEventListener("click", () => setState({ showCrossRef: !state.showCrossRef }));
+  document.getElementById("btnShafts")?.addEventListener("click", () => setState({ showShafts: !state.showShafts }));
 
   document.getElementById("search")?.addEventListener("input", (e) => setState({ searchTerm: e.target.value.trim(), expandedIndex: null }));
 

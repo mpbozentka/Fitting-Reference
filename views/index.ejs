@@ -61,6 +61,18 @@
     .fitting-notes .body { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; }
     .empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); }
     .footer { padding: 20px; text-align: center; font-size: 10px; color: rgba(255,255,255,0.25); border-top: 1px solid rgba(255,255,255,0.04); }
+    .shaft-panel-container { padding: 16px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .shaft-panel-header h3 { margin: 0 0 12px; font-size: 14px; font-weight: 700; letter-spacing: 0.5px; color: var(--accent); }
+    .shaft-group-label { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+    .shaft-note { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; font-style: italic; }
+    .shaft-list { display: flex; flex-direction: column; gap: 8px; }
+    .shaft-row { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px; }
+    .shaft-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .shaft-type { display: inline-block; padding: 1px 6px; border-radius: 3px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .shaft-specs { display: flex; gap: 14px; flex-wrap: wrap; }
+    .shaft-spec { font-size: 11px; color: rgba(255,255,255,0.7); font-family: 'DM Mono', monospace; }
+    .shaft-spec strong { color: rgba(255,255,255,0.4); font-size: 9px; letter-spacing: 0.5px; margin-right: 4px; }
+    .shaft-dots { color: var(--accent); letter-spacing: 1px; font-size: 10px; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -71,7 +83,10 @@
         <h1 class="title">Club Fitting Reference</h1>
         <p class="subtitle">2025–2026 Season • Drivers → Wedges</p>
       </div>
-      <button type="button" class="btn-cross" id="btnCrossRef" aria-pressed="false">⇆ Cross-Ref</button>
+      <div style="display:flex;gap:6px">
+        <button type="button" class="btn-cross" id="btnShafts" aria-pressed="false">🔩 Shafts</button>
+        <button type="button" class="btn-cross" id="btnCrossRef" aria-pressed="false">⇆ Cross-Ref</button>
+      </div>
     </div>
     <input type="text" class="search" id="search" placeholder="Search models, features, player types..." autocomplete="off" />
     <div class="brand-tabs" id="brandTabs"></div>
@@ -104,6 +119,7 @@
     </div>
   </div>
 
+  <div class="shaft-panel-container hidden" id="shaftPanel"></div>
   <div class="cards" id="cards"></div>
 
   <div class="footer">

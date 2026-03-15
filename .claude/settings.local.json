@@ -5,7 +5,11 @@
       "WebFetch(domain:www.callawaygolf.com)",
       "WebFetch(domain:ping.com)",
       "WebFetch(domain:www.titleist.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(cd \"/Users/mitchellbozentka/Desktop/vibe code/golf/Fitting Reference\" && PORT=3001 node server.js)",
+      "Bash(cd \"/Users/mitchellbozentka/Desktop/vibe code/golf/Fitting Reference\" && PORT=3002 node server.js)",
+      "Bash(kill 25636 25678 26376)",
+      "Bash(lsof -i :3002 -t 2>/dev/null | xargs kill 2>/dev/null; lsof -i :3001 -t 2>/dev/null | xargs kill 2>/dev/null; sleep 1 && cd \"/Users/mitchellbozentka/Desktop/vibe code/golf/Fitting Reference\" && PORT=3001 node server.js)"
     ]
   }
 }
